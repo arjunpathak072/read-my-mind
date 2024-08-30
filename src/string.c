@@ -6,6 +6,11 @@
 #include "../include/string.h"
 
 void append(string *input, char c) {
+    if (!input) {
+        input = malloc(sizeof(string));
+        input->size = 0;
+        input->array = "";
+    }
     int length = strlen(input->array);
     
     if (length + 1 == input->size) {
@@ -20,7 +25,7 @@ void append(string *input, char c) {
         memcpy(temp, input->array, length * sizeof(char));
         temp[length] = c;
         temp[length + 1] = '\0';
-        
+        free(input->array);
         input->array = temp;
         input->size = newSize;
     } else {
@@ -61,4 +66,6 @@ void testString() {
     
     string* dup = duplicate(&word);
     assert(strcmp(dup->array, word.array) == 0);
+    
+    free(dup);
 }

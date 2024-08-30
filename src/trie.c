@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -6,13 +7,8 @@
 #include "../include/trie.h"
 
 Node* createNode() {
-    Node *newNode = (Node *)malloc(sizeof(Node));
-    
-    if (newNode == NULL) {
-        printf("error allocating memory\n");
-        exit(1);
-    }
-  
+    Node *newNode = (Node *)malloc(sizeof(Node));  
+    assert(newNode != NULL);
     newNode->isEndOfWord = false;
     for (int i = 0; i < 26; i++) {
         newNode->children[i] = NULL;
@@ -26,8 +22,9 @@ Node *init() {
 }
 
 void insert(Node *root, const char* word) {
+    const char *temp = word;
     Node *current = root;
-    while (*word != '\0') {
+    while (*word != '\n' && *word != '\0') {
         int idx = *word - 'a';
         if (!current->children[idx]) {
             current->children[idx] = createNode();
@@ -39,6 +36,8 @@ void insert(Node *root, const char* word) {
 }
 
 void walk(Node *current, string *prefix) {
+    assert(*prefix->array != '\0');
+    
     if (current->isEndOfWord) {
         printf("%s\n", prefix->array);
         return;
@@ -74,36 +73,40 @@ void predict(Node *root, string *word) {
     prefix->array[count] = '\0';
     prefix->size = word->size;
     
-    // printf("%s, %d, %ld\n\n", prefix->array, prefix->size, strlen(prefix->array));
     walk(itr, prefix);
     free(prefix);
 }
 
 void testTrie() {
-    char* words[] = {
-        "apple",
-        "banana",
-        "ape",
-        "apostle"
-    };
-    
-    char *testCases[] = {
-        "aa",
-        "ap",
-        "b",
-        "ba",
+    int nWords = 3;
+    char *words[3] = {
+        "teleport",
+        "telephone",
+        "telegram",
     };
     Node *root = init();
-    
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < nWords; i++) {
         insert(root, words[i]);
     }
     
-    for (int i = 0; i < 4; i++) {
-        string word;
-        word.array = testCases[i];
-        word.size = strlen(testCases[i]) + 1;
-        predict(root, &word);
+    printf("inserted all words into the trie\n");
+    
+    int nTests = 5;
+    char *tests[5] = {
+        "t",
+        "tele",
+        "tel",
+        "abc",
+        "telep"
+    };
+    
+    for (int i = 0; i < nTests; i++) {
+        printf("prediction for %s:\n", tests[i]);
+        string *query = malloc(sizeof(string));
+        query->array = tests[i];
+        query->size = strlen(query->array) + 1;
+        predict(root, query);
         printf("\n");
+        free(query);
     }
 }
