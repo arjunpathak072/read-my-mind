@@ -15,7 +15,7 @@ string *initString(char* array, int length) {
 
 void resize(string *input) {
     int newCapacity = input->length*2 + 1;
-    input = (string *) realloc(input->array, newCapacity * sizeof(char)); 
+    input->array = (char *) realloc(input->array, newCapacity * sizeof(char)); 
     input->capacity = newCapacity;
 }
 
@@ -68,6 +68,10 @@ void testString() {
     append(dup, '3');
     
     printf("appending to duplicate successful\n");
+    free(str->array);
+    free(str);
+    free(dup->array);
+    free(dup);
 }
 
 int main() {
