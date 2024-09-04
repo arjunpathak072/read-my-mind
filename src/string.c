@@ -5,67 +5,71 @@
 
 #include "../include/string.h"
 
+string *initString(char* array, int length) {
+    string *str = (string *) malloc(sizeof(string));
+    str->array = (char *) malloc(sizeof(char) * (length+1));
+    strcpy(str->array, array);
+    str->capacity = length+1;
+    str->length = length;
+}
+
+void resize(string *input) {
+    int newCapacity = input->length*2 + 1;
+    input = (string *) realloc(input->array, newCapacity * sizeof(char)); 
+    input->capacity = newCapacity;
+}
+
 void append(string *input, char c) {
-    if (!input) {
-        input = malloc(sizeof(string));
-        input->size = 0;
-        input->array = "";
+    if (input->length+1 == input->capacity) {
+        resize(input);
     }
-    int length = strlen(input->array);
-    
-    if (length + 1 == input->size) {
-        int newSize = 2*length + 1;
-        char *temp = (char *) malloc(newSize * sizeof(char));
-        
-        if (temp == NULL) {
-            printf("error allocating memory\n");
-            exit(1);
-        }
-        
-        memcpy(temp, input->array, length * sizeof(char));
-        temp[length] = c;
-        temp[length + 1] = '\0';
-        free(input->array);
-        input->array = temp;
-        input->size = newSize;
-    } else {
-        input->array[length] = c;
-        input->array[length + 1] = '\0';
-    }
+    input->array[input->length++] = c;
+    input->array[input->length] = '\0';
 }
 
 string *duplicate(string *input) {
-    string *dupInput = malloc(1 * sizeof(string));
-    char *dupArray = malloc(input->size * sizeof(char));
+    string *dupString = malloc(sizeof(string));
+    dupString->array = malloc(input->capacity * sizeof(char));
     
-    if (dupArray == NULL) {
-        printf("error allocating memory\n");
-        exit(1);
-    }
-    memcpy(dupArray, input->array, input->size);
+    strcpy(dupString->array, input->array);
+    dupString->capacity = input->capacity;
+    dupString->length = input->length;
     
-    dupInput->array = dupArray;
-    dupInput->size = input->size;
-    
-    return dupInput;
-}
-
-void pop(string *input) {
-    input->array[input->size - 1] = '\0';
+    return dupString;
 }
 
 void testString() {
-    string word;
-    word.array = "apples";
-    word.size = strlen(word.array)+1;
-    append(&word, 'a');
+    char *demo = "demo string";
+    int demoLength = strlen(demo);
+
+    string *str = initString(demo, demoLength);
+    printf("past init phase\n");
+    assert(str->capacity == demoLength+1);
+    assert(str->length == demoLength);
+    printf("initString successful\n");
+
+    append(str, 'a');
+    append(str, 'b');
+    append(str, 'c');
     
-    assert(word.size == 13);
-    assert(strlen(word.array) == 7);
-    assert(strcmp(word.array, "applesa") == 0);
+    printf("append successful\n");
+    assert(strcmp(str->array, "demo stringabc") == 0);
+    assert(str->length == strlen("demo stringabc"));
     
-    string* dup = duplicate(&word);
-    assert(strcmp(dup->array, word.array) == 0);
+    string *dup = duplicate(str);
+    printf("duplication successful\n");
     
-    free(dup);
+    assert(strcmp(dup->array, str->array) == 0);
+    assert(dup->length == str->length);
+    assert(dup->capacity == str->capacity);
+    
+    append(dup, '1');
+    append(dup, '2');
+    append(dup, '3');
+    
+    printf("appending to duplicate successful\n");
+}
+
+int main() {
+    testString();
 }
