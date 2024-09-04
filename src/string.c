@@ -13,7 +13,7 @@ string *initString(char* array, int length) {
     str->length = length;
 }
 
-void resize(string *input) {
+static void resize(string *input) {
     int newCapacity = input->length*2 + 1;
     input->array = (char *) realloc(input->array, newCapacity * sizeof(char)); 
     input->capacity = newCapacity;
@@ -36,6 +36,11 @@ string *duplicate(string *input) {
     dupString->length = input->length;
     
     return dupString;
+}
+
+void delString(string *input) {
+    free(input->array);
+    free(input);
 }
 
 void testString() {
@@ -68,10 +73,8 @@ void testString() {
     append(dup, '3');
     
     printf("appending to duplicate successful\n");
-    free(str->array);
-    free(str);
-    free(dup->array);
-    free(dup);
+    delString(str);
+    delString(dup);
 }
 
 int main() {
