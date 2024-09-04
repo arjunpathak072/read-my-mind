@@ -10,20 +10,28 @@
  * with double the size of the previous is re-allocated in it's place.
 */
 
+/**
+ * @struct string
+ * @brief This structure is a custom string type for prefix matching.
+ *
+ * @var string::array
+ * Member array is the underlying character array that stores all the characters of the string.
+ * @var string::length
+ * Member length keeps track of the number of non null characters in the string, saves time by.
+ * avoiding strlen() calls
+ * @var capacity
+ * Member capacity keeps track of the capacity of the underlying char array.
+ */
+
 struct string {
     char *array;
     int length;
     int capacity;
 };
-typedef struct string string ;
+typedef struct string string;
 
 /**
- * @brief Creates a string out of the given params
- *
- * This functions takes in a null terminated character array and
- * its length, allocates a new string type struct on heap with 
- * length, capacity and array fields initialized based on the input
- * parameters and returns it.
+ * @brief Creates a string out of the given params.
  *
  * @param[in] array
  * @param[int] length
@@ -33,37 +41,27 @@ typedef struct string string ;
 string *initString(char *array, int length);
 
 /**
- * @brief Appends the given character to the given string
+ * @brief Appends a new character to the end of an existing string.
  * 
- * This function takes in a string and appends the given character to
- * it. Appending to a string may trigger a resize under the hood, which
- * will double the capacity of the underlying array, while accounting
- * for the '\0' character in the end.
- *
  * @param[in,out] str
  * @param[in] c
  */
+
 void append(string* str, char c);
 
 /**
- * @brief Duplicated a strings and returns the new one
- *
- * This function takes in a string, duplicates it, and then returns the
- * duplciate that was created. The duplicate has the same length, capacity
- * and a deep copy of the original's array.
+ * @brief Duplicated a strings and returns the new one.
  *
  * @param[int] str
  * @param[out] duplicate
  */
+
 string* duplicate(string* str);
 
 /**
- * @brief Deallocates memory being used by a string
- *
- * This function should be called by the client after a string has done
- * its job. The function deallocates the allocated array, followed by the
- * string itself.
+ * @brief Reclaims the memory allocated to the string.
  *
  * @param[in] str
  */
+
 void delString(string *str);

@@ -1,17 +1,20 @@
 /**
  * @file string.c
- * @brief Provides the implementation for all functions declared in the string.h header file
+ * @brief Provides the implementation for all functions declared in the string.h header file.
  * @author Arjun Pathak
  * 
- * 
+ * This file contains the implementations of all functions that are declared in the string.h
+ * header file. This is a tailored string implementation that will be used by all prefix/suffix
+ * trees in this project. This custom string type allows me to easily append and duplicate strings
+ * on the fly, which was a bit clumsy when doing it the vailla C way (of using char arrays).
  */
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "../include/string.h"
-
 
 /**
  * @brief Creates a string out of the given params
@@ -24,6 +27,8 @@
  * @param[in] array
  * @param[int] length
  * @param[out] str
+ *
+ * @return Returns a pointer to the newly allocated string.
 */
 
 string *initString(char* array, int length) {
@@ -34,11 +39,35 @@ string *initString(char* array, int length) {
     str->length = length;
 }
 
+/**
+ * @brief This helper function is used to resize the underlying char array.
+ *  
+ * The function is relatively simple. It takes in a pointer to string type
+ * and doubles its capacity (while compensating for the \0 character), copies
+ * over the contents from the previous array, and reassigns. The function uses
+ * realloc to achieve this behaviour. If a NULL pointer is passed into the function
+ * , it acts as simple malloc.
+ *
+ * @param[in, out] input The string that needs to be resized.
+ */
+
 static void resize(string *input) {
     int newCapacity = input->length*2 + 1;
     input->array = (char *) realloc(input->array, newCapacity * sizeof(char)); 
     input->capacity = newCapacity;
 }
+
+/**
+ * @brief Appends a new character to the end of an existing string.
+ *
+ * This function takes in a character and a string, and appends the former to
+ * the latter. If the string does not have enough room for one more character,
+ * a resize of the underlying char array is triggered and the capacity and length
+ * fields are updated accordingly.
+ *
+ * @param[in] input The original string.
+ * @param[in] c The character that will be appended.
+ */
 
 void append(string *input, char c) {
     if (input->length+1 == input->capacity) {
@@ -47,6 +76,18 @@ void append(string *input, char c) {
     input->array[input->length++] = c;
     input->array[input->length] = '\0';
 }
+
+/**
+ * @brief Duplicates a strings and returns the new one.
+ * 
+ * This function takes in a string type variable, created a deep copy of it
+ * and returns the newly created one to the caller.
+ *
+ * @param[int] str
+ * @param[out] duplicate
+ * 
+ * @return Returns the newly allocated string, which is a deep copy of the first in parameter.
+ */
 
 string *duplicate(string *input) {
     string *dupString = malloc(sizeof(string));
@@ -59,12 +100,26 @@ string *duplicate(string *input) {
     return dupString;
 }
 
+/**
+ * @brief Reclaims the memory allocated to the string.
+ *
+ * This function calls free on the string that is passed into it, after it has
+ * freed the underlying char array.
+ *
+ * @param[int] input The string that needs to be deleted.
+ */
+
 void delString(string *input) {
     free(input->array);
     free(input);
 }
 
-void testString() {
+/**
+ * @brief This function is used to test the custom string types and all
+ * supported operations
+ */
+
+static void testString() {
     char *demo = "demo string";
     int demoLength = strlen(demo);
 
