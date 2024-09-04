@@ -6,19 +6,26 @@
 
 #include "../include/trie.h"
 
-Node* createNode() {
+static Node* createNode() {
     Node *newNode = (Node *)malloc(sizeof(Node));  
-    assert(newNode != NULL);
     newNode->isEndOfWord = false;
     for (int i = 0; i < 26; i++) {
         newNode->children[i] = NULL;
     }
-    
     return newNode;
 }
 
-Node *init() {
+Node *initTrie() {
     return createNode();
+}
+
+Node *delTrie(Node *node) {
+    for (int i = 0; i < 26; i++) {
+        if (node->children[i]) {
+            delTrie(node->children[i]);
+        }
+    }
+    free(node);
 }
 
 void insert(Node *root, const char* word) {
@@ -36,7 +43,9 @@ void insert(Node *root, const char* word) {
 }
 
 void walk(Node *current, string *prefix) {
-    assert(*prefix->array != '\0');
+    if (*prefix->array == '\0') {
+        return;
+    }
     
     if (current->isEndOfWord) {
         printf("%s\n", prefix->array);
@@ -48,7 +57,7 @@ void walk(Node *current, string *prefix) {
             string *newPrefix = duplicate(prefix);
             append(newPrefix, 'a' + i);
             walk(current->children[i], newPrefix);
-            free(newPrefix);
+            delString(newPrefix);
         }
     }
 }
@@ -57,7 +66,7 @@ void predict(Node *root, string *word) {
     Node *itr = root;
     int count = 0;
     
-    for (int i = 0; i < strlen(word->array); i++) {
+    for (int i = 0; i < word->length; i++) {
         int idx = word->array[i] - 'a';
         if (itr->children[idx]) {
             itr = itr->children[idx];
@@ -66,15 +75,12 @@ void predict(Node *root, string *word) {
             break;
         }
     }
-    
-    string *prefix = malloc(sizeof(string));
-    prefix->array = malloc(word->size * sizeof(char));
-    memcpy(prefix->array, word->array, (count*sizeof(char)));
+    string *prefix = duplicate(word);
     prefix->array[count] = '\0';
-    prefix->size = word->size;
-    
+    prefix->length = count;
     walk(itr, prefix);
-    free(prefix);
+    
+    delString(prefix);
 }
 
 void testTrie() {
@@ -84,7 +90,7 @@ void testTrie() {
         "telephone",
         "telegram",
     };
-    Node *root = init();
+    Node *root = initTrie();
     for (int i = 0; i < nWords; i++) {
         insert(root, words[i]);
     }
@@ -102,11 +108,15 @@ void testTrie() {
     
     for (int i = 0; i < nTests; i++) {
         printf("prediction for %s:\n", tests[i]);
-        string *query = malloc(sizeof(string));
-        query->array = tests[i];
-        query->size = strlen(query->array) + 1;
+        string *query = initString(tests[i], strlen(tests[i]));
         predict(root, query);
         printf("\n");
-        free(query);
+        delString(query);
     }
+    delTrie(root);
+}
+
+int main() {
+    testTrie();
+    return 0;
 }

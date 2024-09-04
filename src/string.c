@@ -1,9 +1,30 @@
+/**
+ * @file string.c
+ * @brief Provides the implementation for all functions declared in the string.h header file
+ * @author Arjun Pathak
+ * 
+ * 
+ */
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "../include/string.h"
+
+
+/**
+ * @brief Creates a string out of the given params
+ *
+ * This functions takes in a null terminated character array and
+ * its length, allocates a new string type struct on heap with 
+ * length, capacity and array fields initialized based on the input
+ * parameters and returns it.
+ *
+ * @param[in] array
+ * @param[int] length
+ * @param[out] str
+*/
 
 string *initString(char* array, int length) {
     string *str = (string *) malloc(sizeof(string));
@@ -75,8 +96,4 @@ void testString() {
     printf("appending to duplicate successful\n");
     delString(str);
     delString(dup);
-}
-
-int main() {
-    testString();
 }
