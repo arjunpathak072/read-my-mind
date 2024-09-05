@@ -83,9 +83,9 @@ static void deleteQueueNode(QueueNode *node) {
 /**
  * @brief This functions deletes the entire queue from the heap
  *
- *  This function calls the deleteQueueNode() helper function for all Queue Nodes starting from the
- *  front of the queue. For more information on how the deletion of each node happens, read the
- *  description of the deleteQueueNode() function.
+ * This function calls the deleteQueueNode() helper function for all Queue Nodes starting from the
+ * front of the queue. For more information on how the deletion of each node happens, read the
+ * description of the deleteQueueNode() function.
  *
  * @param queue The queue to be deallocated
  */
@@ -126,6 +126,7 @@ void addToQueue(Queue *queue, void *value) {
     if (queue->back == NULL) {
         queue->back = node;
         queue->front = node;
+        return;
     }
     queue->back->next = node;
     queue->back = node;

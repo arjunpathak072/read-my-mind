@@ -17,6 +17,7 @@
 #include <string.h>
 
 #include "../include/trie.h"
+#include "../include/queue.h"
 
 /**
  * @brief This function is used to create a new trie node.
@@ -164,6 +165,90 @@ void predict(Node *root, string *word) {
     
     delString(prefix);
 }
+
+/**
+ * @brief This functions returns the first N number of predictions from the Trie
+ *
+ * This function performs a BFS on the Trie structure. It starts from the last matching node in the
+ * trie with the word input and returns a list of prefix matches. The strings are C style null
+ * terminated char arrays.
+ *
+ * @param[in] root Root of the Trie Node.
+ * @param[in] word The word to be prefix matched.
+ * @param[in] results The number of results that the caller expects.
+ * @param[out] resultsBuffer A buffer to hold the words that successfully matched.
+ */
+
+char **predictN(Node *root, string *word, int results) {
+    char **resultsBuffer = malloc(sizeof(char *) * results);
+
+    struct Entity {
+        Node *currTrieNode;
+        string *currPrefix;
+    };
+    typedef struct Entity Entity;
+
+    Node *itr = root;
+    int count = 0;
+    for (int i = 0; i < word->length; i++) {
+        int index = word->array[i] - 'a';
+        if (itr->children[index] != NULL) {
+            itr = itr->children[index];
+            count++;
+        } else {
+            break;
+        }
+    }
+    string *prefix = duplicate(word);
+    prefix->array[count] = '\0';
+    prefix->length = count;
+
+    Entity *e = malloc(sizeof(Entity));
+    e->currTrieNode = itr;
+    e->currPrefix = prefix;
+    Queue *queue = initQueue(e);
+    
+    int matches = 0;
+    while (queue->front && matches != results) {
+        Entity *frontValue = queue->front->value;
+
+        if (frontValue->currTrieNode->isEndOfWord == true) {
+            char *match = malloc(frontValue->currPrefix->length + 1);
+            strcpy(match, frontValue->currPrefix->array);
+            resultsBuffer[matches++] = match;
+        } else {
+            for (int i = 0; i < 26; i++) {
+                if (frontValue->currTrieNode->children[i] != NULL) {
+                    Entity *newEntity = malloc(sizeof(Entity));
+                    newEntity->currTrieNode = frontValue->currTrieNode->children[i];
+                    string *newPrefix = duplicate(frontValue->currPrefix);
+                    append(newPrefix, i + 'a');
+                    newEntity->currPrefix = newPrefix;
+                    
+                    addToQueue(queue, newEntity);
+                }
+            }
+        }
+        delString(frontValue->currPrefix);
+        free(frontValue);
+        removeFromQueue(queue);
+    }
+    if (queue->front == NULL) {
+        deleteQueue(queue);
+        return resultsBuffer;
+    }
+    QueueNode *temp = queue->front;
+    while (temp != NULL) {
+        Entity *frontValue = temp->value;
+        delString(frontValue->currPrefix);
+        free(frontValue);
+        temp = temp->next;
+    }
+    deleteQueue(queue);
+
+    return resultsBuffer;
+}
+
 /**
  * @brief A function to test the Trie Structure and all supported operations on it.
  */
@@ -184,8 +269,8 @@ void testTrie() {
     
     int nTests = 5;
     char *tests[5] = {
-        "t",
         "tele",
+        "t",
         "tel",
         "abc",
         "telep"
@@ -194,8 +279,15 @@ void testTrie() {
     for (int i = 0; i < nTests; i++) {
         printf("prediction for %s:\n", tests[i]);
         string *query = initString(tests[i], strlen(tests[i]));
-        predict(root, query);
+        char **buffer = predictN(root, query, 2);
+        for (int i = 0; i < 2; i++) {
+            printf("%s ", buffer[i]);
+        }
         printf("\n");
+        for (int i = 0; i < 2; i++) {
+            free(buffer[i]);
+        }
+        free(buffer);
         delString(query);
     }
     delTrie(root);

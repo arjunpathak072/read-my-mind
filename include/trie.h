@@ -45,7 +45,7 @@ Node *initTrie();
  * @param[in] word The word that is to be inserted into the Trie.
  */
 
-void insert(Node root*, const char *word);
+void insert(Node *root, const char *word);
 
 /**
  * @brief This function is used to print to stdout, the matching words from
