@@ -56,3 +56,23 @@ void insert(Node *root, const char *word);
  */
 
 void predict(Node *root, string *word);
+
+/**
+ * @brief This function returns the first N matching words in the trie for a given input word and N.
+ *
+ * @param[in] root Root node of the Trie.
+ * @param[in] word Word to be prefix matched.
+ * @param[in] resultsLength The number of results to be returned.
+ *
+ * @return The first resultsLength words returned matched in the Trie.
+ */
+
+char **predictN(Node *root, string *word, int resultsLength);
+
+/**
+ * @brief Takes in the root of the Trie and deletes all the nodes.
+ * 
+ * @param[in] root The root of the Trie.
+ */
+
+void delTrie(Node *root);

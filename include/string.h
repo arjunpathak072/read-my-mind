@@ -65,3 +65,10 @@ string* duplicate(string* str);
  */
 
 void delString(string *str);
+
+/**
+ * @brief Takes in a string and sanitizes it to remove unwanted characters.
+ *
+ * @param[in, out] str The string that has to be sanitized.
+ */
+void sanitize(string *str);

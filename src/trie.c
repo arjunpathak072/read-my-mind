@@ -62,7 +62,7 @@ Node *initTrie() {
  * @param[in] node The root of the trie to be deleted.
  */
 
-Node *delTrie(Node *node) {
+void delTrie(Node *node) {
     for (int i = 0; i < 26; i++) {
         if (node->children[i]) {
             delTrie(node->children[i]);
@@ -88,7 +88,7 @@ Node *delTrie(Node *node) {
 void insert(Node *root, const char* word) {
     const char *temp = word;
     Node *current = root;
-    while (*word != '\n' && *word != '\0') {
+    while (word && *word >= 'a' && *word <= 'z') {
         int idx = *word - 'a';
         if (!current->children[idx]) {
             current->children[idx] = createNode();
@@ -180,6 +180,7 @@ void predict(Node *root, string *word) {
  */
 
 char **predictN(Node *root, string *word, int results) {
+    sanitize(word);
     char **resultsBuffer = malloc(sizeof(char *) * results);
 
     struct Entity {

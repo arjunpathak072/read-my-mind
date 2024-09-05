@@ -115,6 +115,33 @@ void delString(string *input) {
 }
 
 /**
+ * @brief Sanitizes the input string to remove unwanted characters from it
+ *
+ * This functions changes the underlying array to get rid of unwanted characters in the query. The
+ * prefix matching happens only for the english alphabet and happens to be case insensitive. This
+ * function makes sure that all characters fall into that bracket.
+ *
+ * @param[in, out] input The string that is to be sanitized. The array is reallocated in place.
+ */
+
+void sanitize(string *input) {
+    char *sanitized = malloc(sizeof(char) * input->capacity);
+    int itr = 0;
+    for (int i = 0; i <= input->length; i++) {
+        if (input->array[i] >= 'a' && input->array[i] <= 'z') {
+            sanitized[itr++] = input->array[i];
+        } else if (input->array[i] >= 'A' && input->array[i] <= 'Z') {
+            sanitized[itr++] = input->array[i] + 32;
+        }
+    }
+    
+    sanitized[itr] = '\0';
+    input->length = itr;
+    free(input->array);
+    input->array = sanitized;
+}
+
+/**
  * @brief This function is used to test the custom string types and all
  * supported operations
  */
