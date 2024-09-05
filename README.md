@@ -7,8 +7,8 @@ RMM implements an autocomplete system using a trie data structure. The trie (pre
 ## To-Do ✅
 - [x] Figure out efficient string handling in C
 - [x] Implement the trie interface
-- [ ] Implement some way to retrieve top 5 predictions
-- [ ] Optimize for the entire dataset
+- [x] Implement some way to retrieve top 5 predictions
+- [x] Optimize for the entire dataset
 - [ ] Implement a TUI using ncurses
 - [ ] API documentation for easier integration with other programs
 
