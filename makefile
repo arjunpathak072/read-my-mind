@@ -5,10 +5,10 @@ obj = $(patsubst src/%.c, build/%.o, $(src))
 headers = $(wildcard include/*.h)
 
 autocomplete: $(obj)
-	$(CC) $(obj) -o autocomplete
+	$(CC) $(obj) -o autocomplete.out
 
 build/%.o: src/%.c ${headers}
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 
 clean:
-	rm build/*.o autocomplete
+	rm build/*.o autocomplete.out

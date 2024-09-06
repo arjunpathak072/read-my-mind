@@ -20,5 +20,21 @@ If you feel like you have some contibutions to make to RMM, feel free to do the 
 4. Push your branch to your forked repository.
 5. Open a pull request describing your changes and the problem they solve.
 
+## Build Instructions
+If you want to build and test the project out, follow these steps:
+
+1. Cloning the repository
+```bash
+git clone "github.com/arjunpathak072/read-my-mind"
+```
+2. From the root of the project, run
+```bash
+make
+```
+3. In order to clear out the generated .o and .out files, run
+```bash
+make clean
+```
+
 ## License 📃
 Read-My-Mind is licensed under the MIT License. See [LICENSE](LICENSE) for more information.
