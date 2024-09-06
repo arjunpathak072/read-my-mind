@@ -88,13 +88,13 @@ void delTrie(Node *node) {
 void insert(Node *root, const char* word) {
     const char *temp = word;
     Node *current = root;
-    while (word && *word >= 'a' && *word <= 'z') {
-        int idx = *word - 'a';
+    while (temp && *temp >= 'a' && *temp <= 'z') {
+        int idx = *temp - 'a';
         if (!current->children[idx]) {
             current->children[idx] = createNode();
         }
         current = current->children[idx];
-        word++;
+        temp++;
     }
     current->isEndOfWord = true;
 }
@@ -106,7 +106,7 @@ void insert(Node *root, const char* word) {
  * matched with the corresponding letter in the search query. It then recursiively
  * calls itself until it reaches the end of a word, and then prints it to the stdout.
  *
- * @param[in] current Pointer to end of the prefix match Trie Nod.e
+ * @param[in] current Pointer to end of the prefix match Trie Node.
  * @param[in] prefix The prefix that has been matched thus far.
  */
 
@@ -166,23 +166,20 @@ void predict(Node *root, string *word) {
     delString(prefix);
 }
 
-/**
- * @brief This functions returns the first N number of predictions from the Trie
+/** @brief This functions returns the first N number of predictions from the Trie
  *
  * This function performs a BFS on the Trie structure. It starts from the last matching node in the
  * trie with the word input and returns a list of prefix matches. The strings are C style null
  * terminated char arrays.
  *
- * @param[in] root Root of the Trie Node.
- * @param[in] word The word to be prefix matched.
- * @param[in] results The number of results that the caller expects.
- * @param[out] resultsBuffer A buffer to hold the words that successfully matched.
+ * @param[in] root Root of the Trie Node.  @param[in] word The word to be prefix matched.
+ * @param[in] results The number of results that the caller expects.  @param[out] resultsBuffer A
+ * buffer to hold the words that successfully matched.
  */
 
 char **predictN(Node *root, string *word, int results) {
     sanitize(word);
     char **resultsBuffer = malloc(sizeof(char *) * results);
-
     struct Entity {
         Node *currTrieNode;
         string *currPrefix;
@@ -208,28 +205,27 @@ char **predictN(Node *root, string *word, int results) {
     e->currTrieNode = itr;
     e->currPrefix = prefix;
     Queue *queue = initQueue(e);
-    
+
     int matches = 0;
     while (queue->front && matches != results) {
         Entity *frontValue = queue->front->value;
 
         if (frontValue->currTrieNode->isEndOfWord == true) {
-            char *match = malloc(frontValue->currPrefix->length + 1);
+            char *match = calloc(frontValue->currPrefix->length + 1, 1);
             strcpy(match, frontValue->currPrefix->array);
             resultsBuffer[matches++] = match;
-        } else {
-            for (int i = 0; i < 26; i++) {
-                if (frontValue->currTrieNode->children[i] != NULL) {
-                    Entity *newEntity = malloc(sizeof(Entity));
-                    newEntity->currTrieNode = frontValue->currTrieNode->children[i];
-                    string *newPrefix = duplicate(frontValue->currPrefix);
-                    append(newPrefix, i + 'a');
-                    newEntity->currPrefix = newPrefix;
-                    
-                    addToQueue(queue, newEntity);
-                }
+        }
+        for (int i = 0; i < 26; i++) {
+            if (frontValue->currTrieNode->children[i] != NULL) {
+                Entity *newEntity = malloc(sizeof(Entity));
+                newEntity->currTrieNode = frontValue->currTrieNode->children[i];
+                string *newPrefix = duplicate(frontValue->currPrefix);
+                append(newPrefix, i + 'a');
+                newEntity->currPrefix = newPrefix;
+                addToQueue(queue, newEntity);
             }
         }
+
         delString(frontValue->currPrefix);
         free(frontValue);
         removeFromQueue(queue);

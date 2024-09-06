@@ -123,7 +123,7 @@ void addToQueue(Queue *queue, void *value) {
     }
     QueueNode *node = createQueueNode(value);
 
-    if (queue->back == NULL) {
+    if (queue->back == NULL && queue->front == NULL) {
         queue->back = node;
         queue->front = node;
         return;
