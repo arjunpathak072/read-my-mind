@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "*.tmpl": "html",
-        "trie.h": "c",
-        "string.h": "c"
-    }
-}
