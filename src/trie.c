@@ -10,14 +10,14 @@
  * words that are in the trie.
  */
 
+#include <string.h>
 #include <assert.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <string.h>
 
-#include "../include/trie.h"
-#include "../include/queue.h"
+#include "trie.h"
+#include "queue.h"
 
 /**
  * @brief This function is used to create a new trie node.

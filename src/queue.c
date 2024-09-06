@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../include/queue.h"
+#include "queue.h"
 
 /**
  * @brief A helper function to create a new queueNode

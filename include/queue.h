@@ -10,6 +10,9 @@
  * stable than an array based implementation, although a little less cache friendly.
  */
 
+#ifndef QUEUE_H
+#define QUEUE_H
+
 /**
  * @struct QueueNode
  * @brief The structure of a single Queue Node
@@ -77,3 +80,5 @@ void addToQueue(Queue *queue, void *value);
  */
 
 void removeFromQueue(Queue *queue);
+
+#endif

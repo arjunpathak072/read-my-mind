@@ -10,8 +10,11 @@
  * string.c source file.
  */
 
+#ifndef TRIE_H
+#define TRIE_H
+
 #include <stdbool.h>
-#include "../include/string.h"
+#include "cus_string.h"
 
 /**
  * @struct Node
@@ -76,3 +79,5 @@ char **predictN(Node *root, string *word, int resultsLength);
  */
 
 void delTrie(Node *root);
+
+#endif
