@@ -36,5 +36,12 @@ make
 make clean
 ```
 
+## Running the program
+In order to run the program, provide it with a file containing words that you want to search
+through, followed by the number of results that should be returned per query. For example:
+```bash
+./autocomplete.out dictionary.txt 5
+```
+
 ## License 📃
 Read-My-Mind is licensed under the MIT License. See [LICENSE](LICENSE) for more information.
